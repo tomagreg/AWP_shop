@@ -15,12 +15,6 @@
             background-repeat: no-repeat;
         }
 
-        /* Espacement général des colonnes */
-        .container-fluid {
-            padding-left: 20px;
-            padding-right: 20px;
-        }
-
         /* Ajout de fond semi-transparent et bordures arrondies */
         .semi-transparent {
             background-color: rgba(255, 255, 255, 0.8); /* Blanc semi-transparent */
@@ -56,7 +50,7 @@
             max-height: 80%;
             max-width: 100%;
             object-fit: contain;
-            border-radius: 10px; /* Bordure arrondie autour de l'image principale */
+            border-radius: 10px;
         }
 
         .description {
@@ -65,7 +59,7 @@
             border-radius: 10px;
         }
 
-        /* Liste des couleurs */
+
         .color-thumbnail {
             width: 50px;
             height: 50px;
@@ -81,11 +75,9 @@
 
         /* Panier */
         .cart-column {
-            margin-left: 10px;
             border-radius: 15px;
             max-height: 100vh;
             overflow-y: auto;
-            padding: 10px;
         }
 
         .cart-item {
@@ -99,7 +91,7 @@
         }
 
         .cart-item img {
-            border-radius: 50%;
+            border-radius: 70%;
         }
 
         .cart-summary {
@@ -107,6 +99,9 @@
             font-size: 1.2rem;
             text-align: center;
             border-radius: 15px;
+        }
+        .cart-item-actions{
+            border: 0;
         }
     </style>
 </head>
@@ -116,11 +111,11 @@
             <div class="row">
             <!-- Colonne de gauche : Liste des produits -->
             <div class="col-12 col-md-2 p-3 overflow-auto semi-transparent">
-                <h5>All Products</h5>
+                <h5>Our Products</h5>
                 <ul class="list-unstyled">
                     <li v-for="product in products" :key="product.type" class="d-flex align-items-center mb-3 product-list"
                         style="cursor: pointer;" @click="selectProduct(product)">
-                        <img :src="product.pics + product.colors[0] + '.png'" :alt="product.type"
+                        <img :src="product.pics + product.colors[product.randomColorIndex] + '.png'" :alt="product.type"
                              class="me-2" style="width: 40px; height: 40px;">
                         <span>{{ formatType(product.type) }}</span>
                     </li>
@@ -146,15 +141,16 @@
                          :alt="color" :class="['color-thumbnail', { active: color === selectedColor }]"
                          @click="changeColor(color)">
                 </div>
+                <div class="d-flex justify-content-between align-items-center mt-4 semi-transparent">
+                    <span>Price: {{ selectedProduct.price }}$</span><br>
+                </div>
+                <button class="btn btn-primary" @click="addToCart">Add to cart</button>
 
-                <div class="description semi-transparent">
+            <div class="description semi-transparent">
                     <p>{{ selectedProduct.description }}</p>
                 </div>
 
-                <div class="d-flex justify-content-between align-items-center mt-4 semi-transparent">
-                    <span>Price: {{ selectedProduct.price }}$</span>
-                    <button class="btn btn-primary" @click="addToCart">Ajouter au panier</button>
-                </div>
+
             </div>
 
             <!-- Colonne de droite : Panier -->
@@ -162,7 +158,8 @@
                 <h5>Your Cart</h5>
                 <div v-if="cart.length === 0">Your cart is empty.</div>
                 <div v-for="(item, index) in cart" :key="index" class="cart-item">
-                    <img :src="item.product.pics + item.color + '.png'" :alt="item.product.type">
+                    <img :src="item.product.pics + item.color + '.png'" :alt="item.product.type"
+                    class="me-2" style="width: 40px; height: 40px;">
                     <div class="cart-item-details">
                         <div class="cart-item-title">{{ item.product.type }}</div>
                         <div class="cart-item-quantity">Quantity: {{ item.quantity }}</div>
@@ -174,7 +171,7 @@
                     </div>
                 </div>
 
-                <div class="cart-summary">
+                <div class="cart-summary semi-transparent">
                     <div>Total: {{ cartTotal }}$</div>
                 </div>
             </div>
@@ -183,83 +180,92 @@
 </div>
 
     <script>
-        const app = Vue.createApp({
-            data() {
-                return {
-                    products: [],
-                    selectedProduct: {},
-                    selectedColor: "",
-                    cart: [],
-                    loading: true
-                };
-            },
-            methods: {
-                async fetchProducts() {
-                    try {
-                        const response = await fetch('content/product.json');
-                        const data = await response.json();
-                        this.products = data.products;
-                        this.selectedProduct = this.products[0];
-                        this.selectedColor = this.selectedProduct.colors[0];
-                    } catch (error) {
-                        console.error("Error fetching products:", error);
-                    } finally {
-                        this.loading = false;
-                    }
-                },
-                selectProduct(product) {
-                    this.selectedProduct = product;
-                    this.selectedColor = product.colors[0];
-                },
-                changeColor(color) {
-                    this.selectedColor = color;
-                },
-                previousColor() {
-                    const index = this.selectedProduct.colors.indexOf(this.selectedColor);
-                    const prevIndex = (index - 1 + this.selectedProduct.colors.length) % this.selectedProduct.colors.length;
-                    this.selectedColor = this.selectedProduct.colors[prevIndex];
-                },
-                nextColor() {
-                    const index = this.selectedProduct.colors.indexOf(this.selectedColor);
-                    const nextIndex = (index + 1) % this.selectedProduct.colors.length;
-                    this.selectedColor = this.selectedProduct.colors[nextIndex];
-                },
-                addToCart() {
-                    const existingItem = this.cart.find(item => item.product === this.selectedProduct && item.color === this.selectedColor);
-                    if (existingItem) {
-                        existingItem.quantity++;
-                    } else {
-                        this.cart.push({
-                            product: this.selectedProduct,
-                            color: this.selectedColor,
-                            quantity: 1
-                        });
-                    }
-                },
-                updateQuantity(item, change) {
-                    item.quantity += change;
-                    if (item.quantity <= 0) {
-                        this.cart = this.cart.filter(cartItem => cartItem !== item);
-                    }
-                },
-                formatType(type) {
-                    return type ? type.replace(/_/g, ' ') : '';
-                },
-                formatColor(color) {
-                    return color.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    const app = Vue.createApp({
+        data() {
+            return {
+                products: [],
+                selectedProduct: {},
+                selectedColor: "",
+                cart: [],
+                loading: true
+            };
+        },
+        methods: {
+            async fetchProducts() {
+                try {
+                    const response = await fetch('content/product.json');
+                    const data = await response.json();
+                    // Ajout d'une propriété randomColorIndex pour chaque produit
+                    this.products = data.products.map(product => ({
+                        ...product,
+                        randomColorIndex: Math.floor(Math.random() * product.colors.length) // Initialisation avec un index aléatoire
+                    }));
+                    this.selectedProduct = this.products[0];
+                    this.selectedColor = this.selectedProduct.colors[0];
+                } catch (error) {
+                    console.error("Error fetching products:", error);
+                } finally {
+                    this.loading = false;
                 }
             },
-            computed: {
-                cartTotal() {
-                    return this.cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
+            selectProduct(product) {
+                this.selectedProduct = product;
+                this.selectedColor = product.colors[0];
+            },
+            changeColor(color) {
+                this.selectedColor = color;
+            },
+            previousColor() {
+                const index = this.selectedProduct.colors.indexOf(this.selectedColor);
+                const prevIndex = (index - 1 + this.selectedProduct.colors.length) % this.selectedProduct.colors.length;
+                this.selectedColor = this.selectedProduct.colors[prevIndex];
+            },
+            nextColor() {
+                const index = this.selectedProduct.colors.indexOf(this.selectedColor);
+                const nextIndex = (index + 1) % this.selectedProduct.colors.length;
+                this.selectedColor = this.selectedProduct.colors[nextIndex];
+            },
+            addToCart() {
+                const existingItem = this.cart.find(item => item.product === this.selectedProduct && item.color === this.selectedColor);
+                if (existingItem) {
+                    existingItem.quantity++;
+                } else {
+                    this.cart.push({
+                        product: this.selectedProduct,
+                        color: this.selectedColor,
+                        quantity: 1
+                    });
                 }
             },
-            mounted() {
-                this.fetchProducts();
+            updateQuantity(item, change) {
+                item.quantity += change;
+                if (item.quantity <= 0) {
+                    this.cart = this.cart.filter(cartItem => cartItem !== item);
+                }
+            },
+            formatType(type) {
+                return type ? type.replace(/_/g, ' ') : '';
+            },
+            formatColor(color) {
+                return color.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+            },
+            updateRandomIndices() {
+                this.products.forEach(product => product.randomColorIndex = Math.floor(Math.random() * product.colors.length)
+                );
+            },
+        },
+        mounted() {
+            this.fetchProducts();
+            setInterval(this.updateRandomIndices, 5000); // Met à jour les indices toutes les 5 secondes
+        },
+        computed: {
+            cartTotal() {
+                return this.cart.reduce((total, item) => total + item.product.price * item.quantity, 0);
             }
-        });
+        }
+    });
 
-        app.mount('#app');
+    app.mount('#app');
     </script>
 </body>
 </html>
