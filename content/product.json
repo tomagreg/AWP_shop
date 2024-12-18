@@ -1,32 +1,32 @@
 {
   "products": [
     {
-      "type": "Carpet",
-      "description": "Our Carpets are crafted by weaving high-quality wool into thin, lightweight pieces, dyed in vibrant hues to suit any design. Whether you're adding a decorative runner to your hallway or creating intricate floor patterns, these carpets bring personality and warmth to your space. As practical as they are beautiful, they’re easy to craft and even easier to enjoy!",
-      "price": 2,
-      "pics": "content/img/carpet/",
-      "colors": ["lime", "black", "blue", "brown", "cyan", "grey", "light_blue", "light_grey", "green", "magenta", "orange", "pink", "purple", "red", "white", "yellow"]
-    },
-    {
       "type": "Concrete Block",
       "description": "Crafted with precision and care, our 1m³ Concrete Blocks start as a humble pile of colored powder. Once hydrated with a bucket of water, they harden into a durable, vibrant building material. Each block is then meticulously mined by hand to ensure quality. Perfect for bold, modern builds or adding a splash of color to any structure, these blocks combine practicality with creative flair!",
       "price": 5,
       "pics": "content/img/concrete/",
-      "colors": ["light_blue", "black", "blue", "brown", "cyan", "grey", "lime", "light_grey", "green", "magenta", "orange", "pink", "purple", "red", "white", "yellow"]
+      "colors": ["white", "light_grey", "grey", "black", "brown", "red", "orange", "yellow", "lime", "green", "cyan", "light_blue", "blue", "purple", "magenta", "pink"]
     },
     {
       "type": "Wool Block",
       "description": "Our 1m³ Wool Blocks are hand-sheared from only the finest Minecraft sheep, then dyed with care to achieve stunning, vibrant colors. This soft and versatile material is perfect for cozy interiors, intricate pixel art, or crafting imaginative designs. From the pasture to your builds, wool adds a touch of warmth and charm to every creation!",
       "price": 3,
       "pics": "content/img/wool/",
-      "colors": ["green", "black", "blue", "brown", "cyan", "grey", "light_blue", "light_grey", "lime", "magenta", "orange", "pink", "purple", "red", "white", "yellow"]
+      "colors": ["white", "light_grey", "grey", "black", "brown", "red", "orange", "yellow", "lime", "green", "cyan", "light_blue", "blue", "purple", "magenta", "pink"]
     },
     {
       "type": "Bed",
       "description": "Each of our Beds begins with sturdy wooden planks and the fluffiest wool blocks, dyed in an array of brilliant colors. Lovingly crafted by hand, these beds not only ensure a comfortable night’s rest but also function as your personal respawn point. Whether you're exploring dangerous caves or building your dream house, a trusty bed is an essential companion for every adventurer!",
       "price": 10,
       "pics": "content/img/bed/",
-      "colors": ["yellow", "black", "blue", "brown", "cyan", "grey", "light_blue", "light_grey", "lime", "magenta", "orange", "pink", "purple", "red", "white", "green"]
+      "colors": ["white", "light_grey", "grey", "black", "brown", "red", "orange", "yellow", "lime", "green", "cyan", "light_blue", "blue", "purple", "magenta", "pink"]
+    },
+    {
+      "type": "Carpet",
+      "description": "Our Carpets are crafted by weaving high-quality wool into thin, lightweight pieces, dyed in vibrant hues to suit any design. Whether you're adding a decorative runner to your hallway or creating intricate floor patterns, these carpets bring personality and warmth to your space. As practical as they are beautiful, they’re easy to craft and even easier to enjoy!",
+      "price": 2,
+      "pics": "content/img/carpet/",
+      "colors": ["white", "light_grey", "grey", "black", "brown", "red", "orange", "yellow", "lime", "green", "cyan", "light_blue", "blue", "purple", "magenta", "pink"]
     }
   ]
 }
